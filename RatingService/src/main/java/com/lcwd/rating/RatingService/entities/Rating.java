@@ -3,6 +3,7 @@ package com.lcwd.rating.RatingService.entities;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 @Entity
 @Table(name = "micro_rating")
@@ -14,6 +15,17 @@ public class Rating {
 	   private String hotelId;
 	   private int rating;
 	   private String feedback;
+	   
+	   @Transient
+	   private Hotel hotel;
+	
+	   
+	public Hotel getHotel() {
+		return hotel;
+	}
+	public void setHotel(Hotel hotel) {
+		this.hotel = hotel;
+	}
 	public String getRatingId() {
 		return ratingId;
 	}

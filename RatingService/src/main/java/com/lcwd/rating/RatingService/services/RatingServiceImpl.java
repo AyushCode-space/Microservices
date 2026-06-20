@@ -5,7 +5,9 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
+import com.lcwd.rating.RatingService.entities.Hotel;
 import com.lcwd.rating.RatingService.entities.Rating;
 import com.lcwd.rating.RatingService.repositories.RatingRepository;
 
@@ -14,6 +16,9 @@ public class RatingServiceImpl implements RatingService{
     
 	@Autowired
 	private RatingRepository ratingRepository;
+	
+	@Autowired
+	private RestTemplate restTemplate;
 	
 	@Override
 	public Rating CreatRating(Rating rating) {
@@ -29,7 +34,12 @@ public class RatingServiceImpl implements RatingService{
 
 	@Override
 	public List<Rating> getRatingByUserId(String userId) {
-		return ratingRepository.findByUserId(userId);
+		List<Rating> ratings = ratingRepository.findByUserId(userId);
+		for(Rating rating : ratings) {
+		Hotel hotel = restTemplate.getForObject("http://HOTELSERVICE/hotels/"+rating.getHotelId(), Hotel.class);
+		rating.setHotel(hotel);
+		}
+		return ratings;
 	}
 
 	@Override
